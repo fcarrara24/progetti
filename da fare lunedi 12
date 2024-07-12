@@ -1,0 +1,213 @@
+considera
+
+
+
+
+--vista (cambiata con procedura)
+CREATE OR REPLACE VIEW wise01.db_check_rman_w01 (
+   sessione,
+   inizio_job,
+   fine_job,
+   stato_job,
+   tipo_backup,
+   data_input_job,
+   data_output_job,
+   durata_job,
+   id_oper,
+   operazione,
+   inizio_oper,
+   fine_oper,
+   stato_oper,
+   data_input_oper,
+   data_output_oper,
+   tipo_oggetto )
+BEQUEATH DEFINER
+AS
+SELECT  
+    NULL,
+    rd.start_time start_job,
+    rd.end_time end_job,
+	
+	rd.status status_job,
+	
+    rd.input_type input_type_job,
+    rd.input_bytes_display input_job_dis,
+    rd.output_bytes_display output_job_dis,
+    rd.time_taken_display durata_job,
+    rs.recid, 
+    rs.operation,
+    rs.start_time start_oper,
+    rs.end_time end_oper, 
+    
+	rs.status status_oper,
+	
+    TO_CHAR(TRUNC(rs.input_bytes/POWER(1024,3), 2), '990.00')||'G' input_oper_gb,
+    TO_CHAR(TRUNC(rs.output_bytes/POWER(1024,3), 2), '990.00')||'G' output_oper, 
+    rs.object_type
+FROM v$rman_backup_job_details rd,
+     v$rman_status rs
+WHERE rd.session_recid = rs.session_recid
+
+
+--vista (cambiata con procedura)
+CREATE OR REPLACE VIEW wise01.db_check_rman_w01 (
+   sessione,
+   inizio_job,
+   fine_job,
+   stato_job,
+   tipo_backup,
+   data_input_job,
+   data_output_job,
+   durata_job,
+   id_oper,
+   operazione,
+   inizio_oper,
+   fine_oper,
+   stato_oper,
+   data_input_oper,
+   data_output_oper,
+   tipo_oggetto )
+BEQUEATH DEFINER
+AS
+SELECT  
+    rd.session_recid,
+    rd.start_time start_job,
+    rd.end_time end_job,
+	
+	rd.status status_job,
+	
+    rd.input_type input_type_job,
+    rd.input_bytes_display input_job_dis,
+    rd.output_bytes_display output_job_dis,
+    rd.time_taken_display durata_job,
+    rs.recid, 
+    rs.operation,
+    rs.start_time start_oper,
+    rs.end_time end_oper, 
+    
+	rs.status status_oper,
+	
+    TO_CHAR(TRUNC(rs.input_bytes/POWER(1024,3), 2), '990.00')||'G' input_oper_gb,
+    TO_CHAR(TRUNC(rs.output_bytes/POWER(1024,3), 2), '990.00')||'G' output_oper, 
+    rs.object_type
+FROM v$rman_backup_job_details rd,
+     v$rman_status rs
+WHERE rd.session_recid = rs.session_recid
+ORDER BY rd.session_recid, rs.recid
+/
+
+COMMENT ON COLUMN wise01.db_check_rman_w01.sessione IS 'Sessione';
+COMMENT ON COLUMN wise01.db_check_rman_w01.sessione IS 'Data Creazione#FD dd/MM/yyyy HH:mm:ss#CO Data di creazione dell''errore';
+
+COMMENT ON COLUMN wise01.db_check_rman_w01.inizio_job is 'Inizio#FD dd/MM/yyyy HH:mm:ss';
+COMMENT ON COLUMN wise01.db_check_rman_w01.fine_job is 'Fine#FD dd/MM/yyyy HH:mm:ss';
+COMMENT ON COLUMN wise01.db_check_rman_w01.stato_job is '<html>Status<br>job#KV RMAN_STATUS;STATUS';
+COMMENT ON COLUMN wise01.db_check_rman_w01.tipo_backup is '<html>Tipo<br>backup';
+COMMENT ON COLUMN wise01.db_check_rman_w01.data_input_job is '<html>Data<br>input#FD dd/MM/yyyy HH:mm:ss';
+COMMENT ON COLUMN wise01.db_check_rman_w01.data_output_job is '<html>Data<br>output job#FD dd/MM/yyyy HH:mm:ss';
+COMMENT ON COLUMN wise01.db_check_rman_w01.durata_job is '<html>Durata<br>job';
+COMMENT ON COLUMN wise01.db_check_rman_w01.id_oper is '<html>Id<br>operazione';
+COMMENT ON COLUMN wise01.db_check_rman_w01.operazione is 'Operazione';
+COMMENT ON COLUMN wise01.db_check_rman_w01.inizio_oper is '<html>Inizio<br>operazione#FD dd/MM/yyyy HH:mm:ss';
+COMMENT ON COLUMN wise01.db_check_rman_w01.fine_oper is '<html>Inizio<br>operazione#FD dd/MM/yyyy HH:mm:ss';
+COMMENT ON COLUMN wise01.db_check_rman_w01.stato_oper is '<html>Status<br>oper#KV RMAN_STATUS;STATUS';
+COMMENT ON COLUMN wise01.db_check_rman_w01.data_input_oper is '<html>Data<br>input oper#FD dd/MM/yyyy HH:mm:ss';
+COMMENT ON COLUMN wise01.db_check_rman_w01.data_output_oper is '<html>Data<br>output oper#FD dd/MM/yyyy HH:mm:ss';
+COMMENT ON COLUMN wise01.db_check_rman_w01.tipo_oggetto is '<html>Tipo<br>oggetto';
+
+DELETE WISE40.wi_impostaz_maschere WHERE UTENTE = 'WUSER';
+
+
+
+
+
+
+
+
+
+--wi_maschere
+
+INSERT INTO WISE40.WI_MASCHERE (NOME_MASCHERA,PROGRESSIVO,TIPO_COMPONENTE,POSIZIONE_SPLIT,NOME_VISTA,TIPO_MASCHERA,PADRE,ATTRIBUTI,TITOLO) 
+VALUES('DB_STATO_GENERALE',14,'JTABBEDPANE','8','WISE01.DB_CHECK_RMAN_W01','MD',0,NULL,'Estrazioni database');
+
+--wi_maschere_renderer
+
+INSERT INTO WISE40.WI_MASCHERE_RENDERER (NOME_MASCHERA,NOME_VISTA,NOME_COLONNA,INDICE_REGOLA,REGOLA,BACKGROUND,FOREGROUND,FONT,BACKGROUND_2,FOREGROUND_2,FONT_2,F_BUTTON,DESCRIZIONE) 
+VALUES('DB_STATO_GENERALE','DB_CHECK_RMAN_W01','STATO_JOB',1,'#KV;=#STATE_COMPLETED#','0,143,57','0,0,0',NULL,'255,0,0','0,0,0',NULL,'N',NULL);
+INSERT INTO WISE40.WI_MASCHERE_RENDERER (NOME_MASCHERA,NOME_VISTA,NOME_COLONNA,INDICE_REGOLA,REGOLA,BACKGROUND,FOREGROUND,FONT,BACKGROUND_2,FOREGROUND_2,FONT_2,F_BUTTON,DESCRIZIONE) 
+VALUES('DB_STATO_GENERALE','DB_CHECK_RMAN_W01','STATO_JOB',2,'#KV;=#STATE_RUNNING#','0,33,99','0,0,0',NULL,'255,0,0','0,0,0',NULL,'N',NULL);
+INSERT INTO WISE40.WI_MASCHERE_RENDERER (NOME_MASCHERA,NOME_VISTA,NOME_COLONNA,INDICE_REGOLA,REGOLA,BACKGROUND,FOREGROUND,FONT,BACKGROUND_2,FOREGROUND_2,FONT_2,F_BUTTON,DESCRIZIONE) 
+VALUES('DB_STATO_GENERALE','DB_CHECK_RMAN_W01','STATO_JOB',3,'#KV;=#STATE_COMPLETED WITH WARNINGS#','255,255,0','0,0,0',NULL,'255,0,0','0,0,0',NULL,'N',NULL);
+INSERT INTO WISE40.WI_MASCHERE_RENDERER (NOME_MASCHERA,NOME_VISTA,NOME_COLONNA,INDICE_REGOLA,REGOLA,BACKGROUND,FOREGROUND,FONT,BACKGROUND_2,FOREGROUND_2,FONT_2,F_BUTTON,DESCRIZIONE) 
+VALUES('DB_STATO_GENERALE','DB_CHECK_RMAN_W01','STATO_JOB',4,'#KV;=#STATE_RUNNING WITH ERRORS#','255,0,0','0,0,0',NULL,'255,0,0','0,0,0',NULL,'N',NULL);
+INSERT INTO WISE40.WI_MASCHERE_RENDERER (NOME_MASCHERA,NOME_VISTA,NOME_COLONNA,INDICE_REGOLA,REGOLA,BACKGROUND,FOREGROUND,FONT,BACKGROUND_2,FOREGROUND_2,FONT_2,F_BUTTON,DESCRIZIONE) 
+VALUES('DB_STATO_GENERALE','DB_CHECK_RMAN_W01','STATO_JOB',5,'#KV;=#STATE_COMPLETED WITH ERRORS#','255,255,0','0,0,0',NULL,'255,0,0','0,0,0',NULL,'N',NULL);
+INSERT INTO WISE40.WI_MASCHERE_RENDERER (NOME_MASCHERA,NOME_VISTA,NOME_COLONNA,INDICE_REGOLA,REGOLA,BACKGROUND,FOREGROUND,FONT,BACKGROUND_2,FOREGROUND_2,FONT_2,F_BUTTON,DESCRIZIONE) 
+VALUES('DB_STATO_GENERALE','DB_CHECK_RMAN_W01','STATO_JOB',7,'#KV;=#STATE_FAILED#','255,0,0','0,0,0',NULL,'255,0,0','0,0,0',NULL,'N',NULL);
+INSERT INTO WISE40.WI_MASCHERE_RENDERER (NOME_MASCHERA,NOME_VISTA,NOME_COLONNA,INDICE_REGOLA,REGOLA,BACKGROUND,FOREGROUND,FONT,BACKGROUND_2,FOREGROUND_2,FONT_2,F_BUTTON,DESCRIZIONE) 
+VALUES('DB_STATO_GENERALE','DB_CHECK_RMAN_W01','STATO_JOB',8,'#KV;=#STATE_COMPLETED WITH ERRORS#','255,0,0','0,0,0',NULL,'255,0,0','0,0,0',NULL,'N',NULL);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+--lanciare
+cr_pck.CREA()
+
+
+--costante
+INSERT INTO WISE40.UT_COSTANTI (ID_COST,VALORE,ORDINAMENTO,DECODIFICA,MODULO,TABELLA,CAMPO,CR,BACKGROUND,FOREGROUND) 
+VALUES('STATE_COMPLETED','COMPLETED',1,'COMPLETED','WISE01','RMAN_STATUS','STATUS',NULL,NULL,NULL);
+
+INSERT INTO WISE40.UT_COSTANTI (ID_COST,VALORE,ORDINAMENTO,DECODIFICA,MODULO,TABELLA,CAMPO,CR,BACKGROUND,FOREGROUND) 
+VALUES('STATE_RUNNING','RUNNING',1,'RUNNING','WISE01','RMAN_STATUS','STATUS',NULL,NULL,NULL);
+
+INSERT INTO WISE40.UT_COSTANTI (ID_COST,VALORE,ORDINAMENTO,DECODIFICA,MODULO,TABELLA,CAMPO,CR,BACKGROUND,FOREGROUND) 
+VALUES('STATE_COMPLETED WITH WARNINGS','COMPLETED WITH WARNINGS',1,'COMPLETED WITH WARNINGS','WISE01','RMAN_STATUS','STATUS',NULL,NULL,NULL);
+
+INSERT INTO WISE40.UT_COSTANTI (ID_COST,VALORE,ORDINAMENTO,DECODIFICA,MODULO,TABELLA,CAMPO,CR,BACKGROUND,FOREGROUND) 
+VALUES('STATE_RUNNING WITH ERRORS','RUNNING WITH ERRORS',1,'RUNNING WITH ERRORS','WISE01','RMAN_STATUS','STATUS',NULL,NULL,NULL);
+
+INSERT INTO WISE40.UT_COSTANTI (ID_COST,VALORE,ORDINAMENTO,DECODIFICA,MODULO,TABELLA,CAMPO,CR,BACKGROUND,FOREGROUND) 
+VALUES('STATE_COMPLETED WITH WARNINGS','COMPLETED WITH WARNINGS',1,'COMPLETED WITH WARNINGS','WISE01','RMAN_STATUS','STATUS',NULL,NULL,NULL);
+
+INSERT INTO WISE40.UT_COSTANTI (ID_COST,VALORE,ORDINAMENTO,DECODIFICA,MODULO,TABELLA,CAMPO,CR,BACKGROUND,FOREGROUND) 
+VALUES('STATE_COMPLETED WITH ERRORS','COMPLETED WITH ERRORS',1,'COMPLETED WITH ERRORS','WISE01','RMAN_STATUS','STATUS',NULL,NULL,NULL);
+
+INSERT INTO WISE40.UT_COSTANTI (ID_COST,VALORE,ORDINAMENTO,DECODIFICA,MODULO,TABELLA,CAMPO,CR,BACKGROUND,FOREGROUND) 
+VALUES('STATE_FAILED ','FAILED ',1,'FAILED ','WISE01','RMAN_STATUS','STATUS',NULL,NULL,NULL);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+devo testare con dual e dati fasulli che i cambi di colore funzionino
