@@ -6,7 +6,6 @@ FROM   flashback_query_test AS OF TIMESTAMP TO_TIMESTAMP('2004-03-29 13:34:12', 
 
 ```
 
-  COUNT(*)
-
+con questo sistema di query hai la possibilita di tornare indietro nel tempo con i commit
          0
 
